@@ -129,10 +129,8 @@ const ProductRegisterUI = (props: IProductProps) => {
                           ? `https://storage.googleapis.com/${props.images?.[index]}`
                           : props.preImages?.[index]
                       }
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                      }}
+                      width={100}
+                      height={100}
                     />
                   ) : (
                     "미리보기"
