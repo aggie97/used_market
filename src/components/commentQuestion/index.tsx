@@ -1,9 +1,11 @@
+import { EllipsisOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { Divider } from "antd";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 import { useForm } from "react-hook-form";
+import { getDate } from "../../commons/libraries/getDate";
 import {
   IMutation,
   IMutationCreateUseditemQuestionAnswerArgs,
@@ -14,7 +16,7 @@ import {
   IUseditemQuestionAnswer,
 } from "../../commons/types/generated/types";
 import CommentAnswerItem from "../commentAnswerItem";
-import Button from "../common/button";
+import DefaultAvatar from "../common/defaultAvatar";
 import { UPDATE_USED_ITEM_QUESTION } from "../common/newComment/queries";
 import {
   CREATE_USED_ITEM_QUESTION_ANSWER,
@@ -30,6 +32,7 @@ const CommentQuestion = ({
     dataId: string
   ) => (event: MouseEvent<HTMLButtonElement>) => void;
 }) => {
+  const [isOpenButtonBox, setIsOpenButtonBox] = useState(false);
   const { register, handleSubmit, reset } = useForm<
     IUseditemQuestion & IUseditemQuestionAnswer
   >();
@@ -97,22 +100,40 @@ const CommentQuestion = ({
     setIsEditAnswerOpen((prev) => !prev);
   };
 
+  const onClickOpenButtonBox = () => {
+    setIsOpenButtonBox((prev) => !prev);
+  };
+
   return (
     <>
       <QuestionWrapper style={{ display: "flex", gap: "20px" }}>
-        <span>
-          <Image src={String(data?.user.picture)} /> {data?.user.name}
-        </span>
-        <span>질문: {data?.contents}</span>
+        <UserInfo>
+          <div>
+            {data?.user.picture ? (
+              <Image layout="fill" src={String(data?.user.picture)} />
+            ) : (
+              <DefaultAvatar />
+            )}{" "}
+            <span>{data?.user.name}</span>
+          </div>
+          <div>{getDate(data?.createdAt)}</div>
+        </UserInfo>
+        <span>{data?.contents}</span>
         <ButtonBox>
-          <Button onClick={onClickSubmitAnswer}>A달기</Button>
-          <Button onClick={onClickEditQuestion}>Q수정</Button>
-          <button onClick={onClickDeleteQuestion(String(data?._id))}>
-            Q삭제
-          </button>
+          {isOpenButtonBox && (
+            <>
+              <button onClick={onClickSubmitAnswer}>답글 달기</button>
+              <button onClick={onClickEditQuestion}>수정하기</button>
+              <button onClick={onClickDeleteQuestion(String(data?._id))}>
+                삭제하기
+              </button>
+            </>
+          )}
         </ButtonBox>
+        <ToggleButtonForButtonBox onClick={onClickOpenButtonBox}>
+          <EllipsisOutlined />
+        </ToggleButtonForButtonBox>
       </QuestionWrapper>
-      <Divider />
       {isSubmitAnswerOpen ? (
         <div>
           <form onSubmit={handleSubmit(onSubmitAnswer)}>
@@ -121,6 +142,7 @@ const CommentQuestion = ({
           </form>
         </div>
       ) : null}
+      <Divider />
       {isEditAnswerOpen ? (
         <div>
           <form onSubmit={handleSubmit(onEditAnswer)}>
@@ -143,13 +165,55 @@ const CommentQuestion = ({
 export default CommentQuestion;
 
 const QuestionWrapper = styled.div`
+  position: relative;
   display: flex;
   width: 100%;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  span {
+    flex: 8;
+  }
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: #eee;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  div:nth-of-type(1) {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const ButtonBox = styled.div`
+  position: absolute;
+  right: 3rem;
   display: flex;
-  min-width: 300px;
+  flex-direction: column;
+
+  border-radius: 0.5rem;
+  overflow: hidden;
+  min-width: 150px;
+  * {
+    flex: 1;
+  }
+
+  button {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    padding: 0.5rem;
+    cursor: pointer;
+    :hover {
+      background-color: #ddd;
+    }
+  }
+`;
+
+const ToggleButtonForButtonBox = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 `;

@@ -27,8 +27,10 @@ const HomeNavigation = () => {
   const { data } =
     useQuery<Pick<IQuery, "fetchUserLoggedIn">>(FETCH_USER_LOGGED_IN);
   const menu = [
-    { id: "boards", menu: "게시판" },
-    { id: "firebase", menu: "파이어베이스" },
+    {
+      id: router.asPath === "/boards" ? "" : "boards",
+      menu: router.asPath === "/boards" ? "마켓" : "게시판",
+    },
   ];
 
   const sign: Array<IIdMenuProps | null> = [

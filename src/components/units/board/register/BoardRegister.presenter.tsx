@@ -11,7 +11,6 @@ import {
   Picture,
 } from "./BoardRegister.styles";
 import { Button } from "antd";
-
 import styled from "@emotion/styled";
 import { IProps } from "./BoardRegister.types";
 import { uniqueId } from "lodash";

@@ -11,6 +11,14 @@ export const WrapperInner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  li {
+    cursor: pointer;
+  }
+
+  li:hover {
+    color: #ff2e33;
+  }
 `;
 
 export const WrapperInnerLeft = styled.div`
