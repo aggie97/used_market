@@ -97,7 +97,12 @@ const CommentAnswerItem = ({
       <UserInfo>
         <div>
           {answer.user.picture ? (
-            <Image layout="fill" src={String(answer.user.picture)} />
+            <Image
+              layout="fill"
+              src={`https://storage.googleapis.com/${String(
+                answer.user.picture
+              )}`}
+            />
           ) : (
             <DefaultAvatar />
           )}{" "}

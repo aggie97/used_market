@@ -67,7 +67,7 @@ export const ImageShadow = styled.div`
   }
 `;
 
-export const Image = styled.img`
+export const StyledImage = styled.img`
   width: 100%;
   height: 100%;
   z-index: 5;

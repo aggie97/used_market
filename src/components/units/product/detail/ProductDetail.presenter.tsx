@@ -9,7 +9,7 @@ import {
   Header,
   HeaderLeft,
   HeaderRight,
-  Image,
+  StyledImage,
   ImageBox,
   ImageShadow,
   ImageWrapper,
@@ -73,7 +73,9 @@ const ProductDetailUI = (props: IProductDetailProps) => {
             .map((imageUrl) => (
               <ImageBox key={imageUrl}>
                 <ImageShadow></ImageShadow>
-                <Image src={`https://storage.googleapis.com/${imageUrl}`} />
+                <StyledImage
+                  src={`https://storage.googleapis.com/${imageUrl}`}
+                />
               </ImageBox>
             ))}
         </ImageWrapper>
