@@ -6,6 +6,7 @@ export const FETCH_USED_ITEM_QUESTIONS = gql`
       _id
       contents
       user {
+        _id
         name
       }
       createdAt
@@ -23,6 +24,7 @@ export const FETCH_USED_ITEM_QUESTION_ANSWERS = gql`
       _id
       contents
       user {
+        _id
         name
         picture
       }

@@ -12,7 +12,7 @@ const getAccessToken = async () => {
   try {
     const graphQLClient = new GraphQLClient(
       // "https://backend09.codebootcamp.co.kr/graphql01",
-      "https://backend09.codebootcamp.co.kr/graphql01",
+      "https://backend09.codebootcamp.co.kr/graphql",
       {
         credentials: "include",
       }

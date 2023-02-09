@@ -2,6 +2,7 @@ import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { Divider } from "antd";
 import Button from "../../../common/button";
 import KakaoMapLauncher from "../../../common/kakaoMap";
+import useCheckLoggedInUser from "../../../common/useCheckLoggedInUser";
 import ProductCommentList from "../comment/commentList/ProductCommentList.container";
 import ProductNewComment from "../comment/newComment/ProductComment.container";
 import {
@@ -27,6 +28,7 @@ import {
 import { IProductDetailProps } from "./ProductDetail.types";
 
 const ProductDetailUI = (props: IProductDetailProps) => {
+  const loggedInUser = useCheckLoggedInUser();
   return (
     <>
       <ProductDetailWrapper>
@@ -79,19 +81,23 @@ const ProductDetailUI = (props: IProductDetailProps) => {
           <MainLeft>
             <LeftHeader>
               <LeftTitle>
-                {props.data?.fetchUseditem.seller?.name}님이 떠나보내는{" "}
-                {props.data?.fetchUseditem.name}
+                <span>{props.data?.fetchUseditem.seller?.name}</span>님이{" "}
+                떠나보내는 {props.data?.fetchUseditem.name}
                 {props.data?.fetchUseditem.tags?.map((tag, i) => (
                   <LeftTags key={i}>#{tag}</LeftTags>
                 ))}
               </LeftTitle>
-              <SellerProfile>
-                <img
-                  width={56}
-                  height={56}
-                  src={props.data?.fetchUseditem.seller?.picture ?? ""}
-                />
-              </SellerProfile>
+              {props.data?.fetchUseditem.seller?.picture ? (
+                <SellerProfile>
+                  <img
+                    width={56}
+                    height={56}
+                    src={props.data?.fetchUseditem.seller?.picture}
+                  />
+                </SellerProfile>
+              ) : (
+                <img width={50} height={50} src="/avatar.png" />
+              )}
             </LeftHeader>
             <Divider></Divider>
             <div>상품 소개: {props.data?.fetchUseditem.remarks}</div>
@@ -109,7 +115,7 @@ const ProductDetailUI = (props: IProductDetailProps) => {
           </MainLeft>
           <MainRight>
             <StickyBox>
-              <Price>₩{props.data?.fetchUseditem.price}</Price>
+              <Price>가격 : ₩{props.data?.fetchUseditem.price}</Price>
               <Divider />
               <Button
                 onClick={props.onClickBuy(
@@ -120,24 +126,27 @@ const ProductDetailUI = (props: IProductDetailProps) => {
                   ? "판매 완료된 상품입니다."
                   : "구매하기"}
               </Button>
-              <p>상품 신고하기</p>
               <Divider />
               <Button onClick={props.onClickMoveToBack}>돌아가기</Button>
-              <Divider />
-              <Button
-                onClick={props.onClickUpdate(
-                  props.data?.fetchUseditem._id ?? ""
-                )}
-              >
-                수정하기
-              </Button>
-              <Button
-                onClick={props.onClickDelete(
-                  props.data?.fetchUseditem._id ?? ""
-                )}
-              >
-                삭제하기
-              </Button>
+              {props.data?.fetchUseditem.seller?._id === loggedInUser && (
+                <>
+                  <Divider />
+                  <Button
+                    onClick={props.onClickUpdate(
+                      props.data?.fetchUseditem._id ?? ""
+                    )}
+                  >
+                    수정하기
+                  </Button>
+                  <Button
+                    onClick={props.onClickDelete(
+                      props.data?.fetchUseditem._id ?? ""
+                    )}
+                  >
+                    삭제하기
+                  </Button>
+                </>
+              )}
             </StickyBox>
           </MainRight>
         </MainContent>

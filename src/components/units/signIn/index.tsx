@@ -82,35 +82,37 @@ const SignIn = () => {
   };
   return (
     <SignPageWrapper>
-      <Logo />
-      <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-        <Email
-          placeholder="이메일을 입력해주세요."
-          type="email"
-          id="email"
-          {...register("email")}
-        />
-        <CommonError>{formState.errors.email?.message}</CommonError>
-        <PasswordWrapper>
-          <Password
-            placeholder="비밀번호를 입력해주세요."
-            {...register("password")}
-            type={isPasswordMasked ? "password" : "text"}
-            id="password"
+      <LoginContainer>
+        <Logo />
+        <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+          <Email
+            placeholder="이메일을 입력해주세요."
+            type="email"
+            id="email"
+            {...register("email")}
           />
-          <CommonError>{formState.errors.password?.message}</CommonError>
-          <ToggleLabel onClick={onClickToggleLabel}>
-            {isPasswordMasked ? "비밀번호 보기" : "가리기"}
-          </ToggleLabel>
-        </PasswordWrapper>
-        <Button>로그인</Button>
-      </FormWrapper>
-      <div>
-        <p>회원이 아니신가요?</p>
-        <MoveToSignUp onClick={async () => await router.push("/signUp")}>
-          회원가입 하러가기
-        </MoveToSignUp>
-      </div>
+          <CommonError>{formState.errors.email?.message}</CommonError>
+          <PasswordWrapper>
+            <Password
+              placeholder="비밀번호를 입력해주세요."
+              {...register("password")}
+              type={isPasswordMasked ? "password" : "text"}
+              id="password"
+            />
+            <CommonError>{formState.errors.password?.message}</CommonError>
+            <ToggleLabel onClick={onClickToggleLabel}>
+              {isPasswordMasked ? "비밀번호 보기" : "가리기"}
+            </ToggleLabel>
+          </PasswordWrapper>
+          <Button>로그인</Button>
+        </FormWrapper>
+        <div>
+          <p>회원이 아니신가요?</p>
+          <MoveToSignUp onClick={async () => await router.push("/signUp")}>
+            회원가입 하러가기
+          </MoveToSignUp>
+        </div>
+      </LoginContainer>
     </SignPageWrapper>
   );
 };
@@ -119,13 +121,17 @@ export default SignIn;
 
 export const SignPageWrapper = styled.div`
   /* width: 100%; */
-  padding: 83px 0;
-  width: 328px;
-  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding-top: 200px;
+`;
+
+const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 2rem;
 `;
 
 export const FormWrapper = styled.form`
@@ -158,7 +164,7 @@ export const Password = styled.input`
 export const ToggleLabel = styled.label`
   position: absolute;
   top: 0;
-  left: 220px;
+  left: 180px;
   line-height: 45px;
   font-size: 14px;
   font-weight: 400;
