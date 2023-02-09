@@ -92,6 +92,9 @@ export const LeftHeader = styled.div`
 
 export const LeftTitle = styled.h2`
   font-weight: 600;
+  span:nth-of-type(1) {
+    color: #6401ff;
+  }
 `;
 
 export const LeftTags = styled.span`
