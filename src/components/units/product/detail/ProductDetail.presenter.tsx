@@ -5,36 +5,17 @@ import KakaoMapLauncher from "../../../common/kakaoMap";
 import useCheckLoggedInUser from "../../../common/useCheckLoggedInUser";
 import ProductCommentList from "../comment/commentList/ProductCommentList.container";
 import ProductNewComment from "../comment/newComment/ProductComment.container";
-import {
-  Header,
-  HeaderLeft,
-  HeaderRight,
-  StyledImage,
-  ImageBox,
-  ImageShadow,
-  ImageWrapper,
-  LeftHeader,
-  LeftTags,
-  LeftTitle,
-  MainContent,
-  MainLeft,
-  MainRight,
-  Price,
-  ProductDetailWrapper,
-  SellerProfile,
-  StickyBox,
-  Title,
-} from "./ProductDetail.styles";
+import * as S from "./ProductDetail.styles";
 import { IProductDetailProps } from "./ProductDetail.types";
 
 const ProductDetailUI = (props: IProductDetailProps) => {
   const loggedInUser = useCheckLoggedInUser();
   return (
     <>
-      <ProductDetailWrapper>
-        <Title>{props.data?.fetchUseditem.name}</Title>
-        <Header>
-          <HeaderLeft>
+      <S.ProductDetailWrapper>
+        <S.Title>{props.data?.fetchUseditem.name}</S.Title>
+        <S.Header>
+          <S.HeaderLeft>
             <div>
               <HeartOutlined style={{ color: "red", fontSize: "1em" }} />
               {props.data?.fetchUseditem.pickedCount}
@@ -42,8 +23,8 @@ const ProductDetailUI = (props: IProductDetailProps) => {
             <div>
               등록 일시: {props.data?.fetchUseditem.createdAt.slice(0, 10)}
             </div>
-          </HeaderLeft>
-          <HeaderRight>
+          </S.HeaderLeft>
+          <S.HeaderRight>
             <button
               style={{
                 display: "flex",
@@ -65,59 +46,61 @@ const ProductDetailUI = (props: IProductDetailProps) => {
                 <HeartOutlined style={{ fontSize: "2em", color: "red" }} />
               )}
             </button>
-          </HeaderRight>
-        </Header>
-        <ImageWrapper>
+          </S.HeaderRight>
+        </S.Header>
+        <S.ImageWrapper>
           {props.data?.fetchUseditem.images
             ?.filter((url) => url)
             .map((imageUrl) => (
-              <ImageBox key={imageUrl}>
-                <ImageShadow></ImageShadow>
-                <StyledImage
+              <S.ImageBox key={imageUrl}>
+                <S.ImageShadow></S.ImageShadow>
+                <S.StyledImage
                   src={`https://storage.googleapis.com/${imageUrl}`}
                 />
-              </ImageBox>
+              </S.ImageBox>
             ))}
-        </ImageWrapper>
-        <MainContent>
-          <MainLeft>
-            <LeftHeader>
-              <LeftTitle>
+        </S.ImageWrapper>
+        <S.MainContent>
+          <S.MainLeft>
+            <S.LeftHeader>
+              <S.LeftTitle>
                 <span>{props.data?.fetchUseditem.seller?.name}</span>님이{" "}
                 떠나보내는 {props.data?.fetchUseditem.name}
                 {props.data?.fetchUseditem.tags?.map((tag, i) => (
-                  <LeftTags key={i}>#{tag}</LeftTags>
+                  <S.LeftTags key={i}>#{tag}</S.LeftTags>
                 ))}
-              </LeftTitle>
+              </S.LeftTitle>
               {props.data?.fetchUseditem.seller?.picture ? (
-                <SellerProfile>
+                <S.SellerProfile>
                   <img
                     width={56}
                     height={56}
                     src={props.data?.fetchUseditem.seller?.picture}
                   />
-                </SellerProfile>
+                </S.SellerProfile>
               ) : (
                 <img width={50} height={50} src="/avatar.png" />
               )}
-            </LeftHeader>
+            </S.LeftHeader>
             <Divider></Divider>
-            <div>상품 소개: {props.data?.fetchUseditem.remarks}</div>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: props.data?.fetchUseditem.contents ?? "",
-              }}
-            ></div>
-            <div>
-              <div>
+            <S.LeftContentBox>
+              <p>{props.data?.fetchUseditem.remarks}</p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html:
+                    props.data?.fetchUseditem.contents ??
+                    "판매자가 작성한 소개가 없습니다.",
+                }}
+              ></p>
+              <p>
                 거래 위치: {props.data?.fetchUseditem.useditemAddress?.address},
                 {props.data?.fetchUseditem.useditemAddress?.addressDetail}
-              </div>
-            </div>
-          </MainLeft>
-          <MainRight>
-            <StickyBox>
-              <Price>가격 : ₩{props.data?.fetchUseditem.price}</Price>
+              </p>
+            </S.LeftContentBox>
+          </S.MainLeft>
+          <S.MainRight>
+            <S.StickyBox>
+              <S.Price>가격 : ₩{props.data?.fetchUseditem.price}</S.Price>
               <Divider />
               <Button
                 onClick={props.onClickBuy(
@@ -149,16 +132,16 @@ const ProductDetailUI = (props: IProductDetailProps) => {
                   </Button>
                 </>
               )}
-            </StickyBox>
-          </MainRight>
-        </MainContent>
+            </S.StickyBox>
+          </S.MainRight>
+        </S.MainContent>
         <div style={{ height: "480px" }}>
           <KakaoMapLauncher
             address={props.data?.fetchUseditem.useditemAddress?.address ?? ""}
             routerId={String(props.routerId)}
           />
         </div>
-      </ProductDetailWrapper>
+      </S.ProductDetailWrapper>
       <ProductNewComment useditemId={String(props.routerId)} />
       <Divider />
       <ProductCommentList useditemId={String(props.routerId)} />

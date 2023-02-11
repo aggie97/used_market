@@ -76,7 +76,7 @@ export const StyledImage = styled.img`
 export const MainContent = styled.div`
   display: flex;
   width: 100%;
-  height: 80vh;
+  min-height: 80vh;
 `;
 
 export const MainLeft = styled.div`
@@ -108,6 +108,11 @@ export const LeftTags = styled.span`
   background-color: aliceblue;
 `;
 
+export const LeftContentBox = styled.div`
+  width: 100%;
+  height: fit-content;
+`;
+
 export const SellerProfile = styled.div`
   border: 1px solid #ddd;
   border-radius: 50%;
@@ -117,7 +122,7 @@ export const SellerProfile = styled.div`
 export const MainRight = styled.div`
   width: 33.333%;
   margin-left: 8.333%;
-  height: 100%;
+  height: inherit;
 `;
 
 export const StickyBox = styled.div`
@@ -127,6 +132,7 @@ export const StickyBox = styled.div`
   box-shadow: rgb(0 0 0 / 12%) 0px 6px 16px;
   border-radius: 12px;
   padding: 1.5em;
+  background-color: #ffffffcc;
 `;
 
 export const Price = styled.span`

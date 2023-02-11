@@ -1,17 +1,20 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Head from "next/head";
+import Image from "next/image";
+import { useState } from "react";
 import {
   IMutation,
   IMutationCreatePointTransactionOfLoadingArgs,
   IQuery,
 } from "../../../commons/types/generated/types";
+import Button from "../../common/button";
 import useAuth from "../../common/useAuth";
+import * as S from "./myPage.styles";
 
 const USER_LOGGED_IN = gql`
   query {
     fetchUserLoggedIn {
       _id
-      email
       name
       picture
       userPoint {
@@ -49,8 +52,16 @@ declare const window: typeof globalThis & {
 const MyPage = () => {
   useAuth();
 
+  const TabMenu = [
+    { name: "찜 목록", content: "찜 목록" },
+    { name: "장바구니 목록", content: " 장바구니 목록" },
+    { name: "구매 목록", content: "구매 목록" },
+    { name: "판매 목록", content: "판매 목록" },
+  ];
+
   const { data } = useQuery<Pick<IQuery, "fetchUserLoggedIn">>(USER_LOGGED_IN);
 
+  const [activeTab, setActiveTab] = useState([true, false, false, false]);
   const [createPointTransactionOfLoading] = useMutation<
     Pick<IMutation, "createPointTransactionOfLoading">,
     IMutationCreatePointTransactionOfLoadingArgs
@@ -86,7 +97,7 @@ const MyPage = () => {
               refetchQueries: [{ query: USER_LOGGED_IN }],
             });
             console.log(result);
-            alert("뮤테이션 요청 완료");
+            alert("결제 요청 완료");
           } catch (error) {
             if (error instanceof Error) console.log(error);
           }
@@ -96,6 +107,11 @@ const MyPage = () => {
       }
     );
   };
+
+  const onChangeActiveTab = (index: number) => () => {
+    setActiveTab((prev) => prev.map((_, stateIndex) => index === stateIndex));
+  };
+
   return (
     <>
       <Head>
@@ -109,23 +125,49 @@ const MyPage = () => {
           src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"
         ></script>
       </Head>
-      <div
-        style={{
-          maxWidth: "1240px",
-          width: "100%",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <div>
-          <div>{data?.fetchUserLoggedIn.picture ?? "사진 없음"}</div>
-          <div>{data?.fetchUserLoggedIn.name}</div>
-          <div>{data?.fetchUserLoggedIn.email}</div>
-          <div>Point: {data?.fetchUserLoggedIn.userPoint?.amount}</div>
-          <button onClick={onClickCharge}>충전하기</button>
-        </div>
-      </div>
+      <S.Wrapper>
+        <S.LeftSideWrapper>
+          <S.UserInfo>
+            <S.UserImageBox>
+              {data?.fetchUserLoggedIn.picture ? (
+                <Image
+                  layout="fill"
+                  src={`https://storage.googleapis.com/${data?.fetchUserLoggedIn.picture}`}
+                />
+              ) : (
+                <S.DefaultImage>프로필 이미지 선택하기</S.DefaultImage>
+              )}
+            </S.UserImageBox>
+            <S.UserName>{data?.fetchUserLoggedIn.name}</S.UserName>
+            <S.PointBox>
+              보유 포인트{" "}
+              <S.Point>{data?.fetchUserLoggedIn.userPoint?.amount}P</S.Point>
+            </S.PointBox>
+            <Button padding={"0.5rem"} onClick={onClickCharge}>
+              충전하기
+            </Button>
+          </S.UserInfo>
+          <S.TabBox>
+            <S.TabUl>
+              {TabMenu.map((menu, index) => (
+                <S.TabLi
+                  isActive={activeTab[index]}
+                  onClick={onChangeActiveTab(index)}
+                  key={index}
+                >
+                  {menu.name}
+                </S.TabLi>
+              ))}
+            </S.TabUl>
+          </S.TabBox>
+        </S.LeftSideWrapper>
+        <S.Divider></S.Divider>
+        <S.RightSideWrapper>
+          <S.TabContentBox>
+            {TabMenu[activeTab.indexOf(true)].content}
+          </S.TabContentBox>
+        </S.RightSideWrapper>
+      </S.Wrapper>
     </>
   );
 };
