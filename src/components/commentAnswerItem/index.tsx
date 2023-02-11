@@ -98,7 +98,8 @@ const CommentAnswerItem = ({
         <div>
           {answer.user.picture ? (
             <Image
-              layout="fill"
+              width={38}
+              height={38}
               src={`https://storage.googleapis.com/${String(
                 answer.user.picture
               )}`}

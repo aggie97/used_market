@@ -7,3 +7,7 @@ export const globalStyles = css`
     box-sizing: border-box;
   }
 `;
+
+export const styleSet = {
+  mainColor: "#6401ff",
+};

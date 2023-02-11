@@ -4,11 +4,23 @@ interface IButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: string | JSX.Element;
   type?: "button" | "submit";
+  width?: string;
+  padding?: string;
+}
+
+interface IStyle {
+  width?: string;
+  padding?: string;
 }
 
 const Button = (props: IButtonProps) => {
   return (
-    <StyledButton type={props.type} onClick={props.onClick}>
+    <StyledButton
+      width={props.width}
+      padding={props.padding}
+      type={props.type}
+      onClick={props.onClick}
+    >
       {props.children}
     </StyledButton>
   );
@@ -17,9 +29,9 @@ const Button = (props: IButtonProps) => {
 export default Button;
 
 const StyledButton = styled.button`
-  width: 100%;
-  padding: 10px 1em;
-  font-size: 15px;
+  width: ${(props: IStyle) => (props.width ? props.width : "100%")};
+  padding: ${(props: IStyle) => (props.padding ? props.padding : "0.5rem")};
+  font-size: 1rem;
   font-weight: 400;
   outline: none;
   transition: all 0.3s ease;
