@@ -10,8 +10,8 @@ import {
   IQuery,
   IQueryFetchBoardsArgs,
 } from "../../../../commons/types/generated/types";
-
 import { debounce } from "lodash";
+import type { Dayjs } from "dayjs";
 
 const BoardList = () => {
   const router = useRouter();
@@ -26,9 +26,6 @@ const BoardList = () => {
 
   const { data: totalBoardsCount, refetch: refetchCount } =
     useQuery<Pick<IQuery, "fetchBoardsCount">>(FETCH_BOARDS_COUNT);
-
-  // const [titleSearch, setTitleSearch] = useState("");
-  // 검색 state
 
   const onClickCreate = () => {
     void router.push(`/boards/new`);
@@ -50,9 +47,19 @@ const BoardList = () => {
     await getDebounceToRefetch(event.target.value);
   };
 
+  const onChangeDate = async (dates: null | Array<Dayjs | null>) => {
+    const startDate = new Date(String(dates?.[0]?.format("YYYY-MM-DD HH:mm")));
+    const endDate = new Date(String(dates?.[1]?.format("YYYY-MM-DD HH:mm")));
+    await refetch({
+      startDate,
+      endDate,
+      page: 1,
+    });
+  };
   return (
     <BoardListUI
       onClickCreate={onClickCreate}
+      onChangeDate={onChangeDate}
       totalBoards={totalBoards}
       bestBoards={bestBoards}
       onClickListItem={onClickListItem}

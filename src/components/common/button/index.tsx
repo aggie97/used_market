@@ -6,17 +6,20 @@ interface IButtonProps {
   type?: "button" | "submit";
   width?: string;
   padding?: string;
+  height?: string;
 }
 
 interface IStyle {
   width?: string;
   padding?: string;
+  height?: string;
 }
 
 const Button = (props: IButtonProps) => {
   return (
     <StyledButton
       width={props.width}
+      height={props.height}
       padding={props.padding}
       type={props.type}
       onClick={props.onClick}
@@ -29,8 +32,9 @@ const Button = (props: IButtonProps) => {
 export default Button;
 
 const StyledButton = styled.button`
-  width: ${(props: IStyle) => (props.width ? props.width : "100%")};
-  padding: ${(props: IStyle) => (props.padding ? props.padding : "0.5rem")};
+  width: ${(props: IStyle) => props.width ?? "100%"};
+  height: ${(props: IStyle) => props.height ?? "100%"};
+  padding: ${(props: IStyle) => props.padding ?? "0.5rem"};
   font-size: 1rem;
   font-weight: 400;
   outline: none;

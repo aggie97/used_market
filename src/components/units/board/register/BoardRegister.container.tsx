@@ -74,7 +74,7 @@ const BoardRegister = ({ isEdit, data }: IBoardRegisterProps) => {
     const { currentTarget } = event;
     const elements = Object.values(currentTarget)
       .filter((ele) => ele.type !== "button")
-      .slice(0, 8);
+      .slice(0, 4);
 
     const emptyInputExist = elements.some((input) => input.value === "");
     if (emptyInputExist) {
@@ -207,7 +207,7 @@ const BoardRegister = ({ isEdit, data }: IBoardRegisterProps) => {
           }
         } else setInput({ ...input, images: [imgUrl] });
       } catch (error) {
-        if (error instanceof Error) console.log(error.message);
+        if (error instanceof Error) Modal.error({ content: error.message });
       }
     } else {
       const changedContent = event.target.value;
@@ -220,6 +220,10 @@ const BoardRegister = ({ isEdit, data }: IBoardRegisterProps) => {
     imageRef.current?.click();
   };
 
+  const onCloseModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <BoardRegisterUI
@@ -227,6 +231,7 @@ const BoardRegister = ({ isEdit, data }: IBoardRegisterProps) => {
         onClickAddressSearch={onClickAddressSearch}
         onClickPicture={onClickPicture}
         onChangeInput={onChangeInput}
+        onCloseModal={onCloseModal}
         submitForm={submitForm}
         editForm={editForm}
         isOpen={isOpen}

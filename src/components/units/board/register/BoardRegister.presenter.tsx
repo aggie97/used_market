@@ -10,14 +10,16 @@ import {
   AddressSearchInput,
   Picture,
 } from "./BoardRegister.styles";
-import { Button } from "antd";
 import styled from "@emotion/styled";
 import { IProps } from "./BoardRegister.types";
 import { uniqueId } from "lodash";
+import { styleSet } from "../../../../commons/styles/globalStyles";
+import Button from "../../../common/button";
 
 const BoardRegisterUI = ({
   onCompleteAddressSearch,
   onClickAddressSearch,
+  onCloseModal,
   onClickPicture,
   onChangeInput,
   submitForm,
@@ -32,7 +34,7 @@ const BoardRegisterUI = ({
   return (
     <>
       {isOpen && (
-        <AddressModal visible={true}>
+        <AddressModal open={true} onCancel={onCloseModal}>
           <AddressSearchInput onComplete={onCompleteAddressSearch} />
         </AddressModal>
       )}
@@ -45,7 +47,6 @@ const BoardRegisterUI = ({
               id="writer"
               type="text"
               placeholder="이름을 적어주세요."
-              // @ts-expect-error
               isEmpty={isEmpty}
               onChange={onChangeInput}
               defaultValue={data?.fetchBoard?.writer ?? ""}
@@ -55,7 +56,6 @@ const BoardRegisterUI = ({
             <span>비밀번호</span>
             <Input
               id="password"
-              // @ts-expect-error
               isEmpty={isEmpty}
               type="password"
               placeholder="비밀번호를 입력해주세요."
@@ -67,7 +67,6 @@ const BoardRegisterUI = ({
           <span>제목</span>
           <Input
             id="title"
-            // @ts-expect-error
             isEmpty={isEmpty}
             type="text"
             placeholder="제목을 작성해주세요."
@@ -80,7 +79,6 @@ const BoardRegisterUI = ({
           <TextArea
             id="contents"
             placeholder="내용을 작성해주세요."
-            // @ts-expect-error
             isEmpty={isEmpty}
             onChange={onChangeInput}
             defaultValue={data?.fetchBoard?.contents}
@@ -94,8 +92,6 @@ const BoardRegisterUI = ({
               type="text"
               readOnly
               placeholder="07250"
-              // @ts-expect-error
-              isEmpty={isEmpty}
               value={
                 input.zipcode || (data?.fetchBoard?.boardAddress?.zipcode ?? "")
               }
@@ -109,8 +105,6 @@ const BoardRegisterUI = ({
             type="text"
             readOnly
             placeholder="주소를 입력해주세요."
-            // @ts-expect-error
-            isEmpty={isEmpty}
             value={
               input.address || (data?.fetchBoard?.boardAddress?.address ?? "")
             }
@@ -120,8 +114,6 @@ const BoardRegisterUI = ({
             id="addressDetail"
             type="text"
             placeholder="상세 주소를 입력해주세요."
-            // @ts-expect-error
-            isEmpty={isEmpty}
             onChange={onChangeInput}
             defaultValue={data?.fetchBoard?.boardAddress?.addressDetail ?? ""}
           />
@@ -133,8 +125,6 @@ const BoardRegisterUI = ({
             type="text"
             placeholder="링크를 적어주세요."
             onChange={onChangeInput}
-            // @ts-expect-error
-            isEmpty={isEmpty}
             defaultValue={data?.fetchBoard?.youtubeUrl ?? ""}
           />
         </InputBox>
@@ -180,17 +170,9 @@ const BoardRegisterUI = ({
           <div></div>
         </MainSettingBox>
         <SubmitBox>
-          <button style={{ border: "1px solid skyblue", borderRadius: "5px" }}>
-            <Button
-              style={{
-                padding: "1em 2em",
-                width: "150px",
-                height: "100%",
-              }}
-            >
-              {isEdit ? "수정" : "등록"}
-            </Button>
-          </button>
+          <Button width="10rem" padding="1rem">
+            {isEdit ? "수정하기" : "등록하기"}
+          </Button>
         </SubmitBox>
       </Wrapper>
     </>
@@ -199,13 +181,15 @@ const BoardRegisterUI = ({
 
 export default BoardRegisterUI;
 
+interface IStyle {
+  isEmpty?: boolean;
+}
+
 const Input = styled.input`
   outline: none;
 
   &::placeholder {
-    ${(props) =>
-      // @ts-expect-error
-      props.isEmpty ? "color: red;" : "color: #bdbdbd"};
+    ${(props: IStyle) => (props.isEmpty ? "color: red;" : "color: #bdbdbd")};
   }
 `;
 
@@ -215,4 +199,8 @@ const TextArea = styled(Input.withComponent("textarea"))`
   padding: 14px;
   border: 1px solid #bdbdbd;
   resize: none;
+  transition: border 0.3s ease;
+  :focus {
+    border: 1px solid ${styleSet.mainColor};
+  }
 `;

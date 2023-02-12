@@ -44,12 +44,6 @@ export const FETCH_BEST_BOARDS = gql`
       likeCount
       dislikeCount
       images
-      boardAddress {
-        _id
-        zipcode
-        address
-        addressDetail
-      }
       user {
         _id
         email

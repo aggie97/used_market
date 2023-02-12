@@ -5,6 +5,7 @@ import {
   IQuery,
   IQueryFetchBoardsArgs,
 } from "../../../../commons/types/generated/types";
+import type { Dayjs } from "dayjs";
 
 export interface IBoardArray {
   _id?: string;
@@ -16,6 +17,10 @@ export interface IBoardArray {
 }
 
 export interface IBoardList {
+  onChangeDate: (
+    dates: null | Array<Dayjs | null>,
+    dateStrings: string[]
+  ) => void;
   onClickCreate: (event: MouseEvent<HTMLButtonElement>) => void;
   onClickListItem?: (event: MouseEvent<HTMLDivElement>) => void;
   onClickBestItem: (event: MouseEvent<HTMLDivElement>) => void;

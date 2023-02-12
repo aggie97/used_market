@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 import { ReactElement } from "react";
-import "antd/dist/antd.css";
+import "antd/dist/reset.css";
 import ApolloSetting from "../src/components/common/apollo";
 import { Global } from "@emotion/react";
 import { globalStyles } from "../src/commons/styles/globalStyles";
