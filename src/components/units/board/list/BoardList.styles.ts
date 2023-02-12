@@ -38,35 +38,41 @@ export const BestBoard = styled.div`
   background: #fff;
   border-radius: 1.25em;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+
   overflow: hidden;
   cursor: pointer;
   transition: 0.3s all ease;
   &:hover {
     transform: translateY(-20px);
-    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 20px 10px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
 export const BestBoardImg = styled.img`
-  flex: 1;
-  max-height: 110px;
-  object-fit: contain;
+  width: 100%;
+  max-height: 10rem;
+  object-fit: cover;
   background: #eee;
+`;
+export const BestBoardDefaultImg = styled.div`
+  height: 10rem;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
 `;
 
 export const BestBoardInfo = styled.div`
-  flex: 1.05;
   display: flex;
   flex-direction: column;
-  padding: 5%;
+  padding: 3%;
 `;
 
 export const BestBoardTitle = styled.span`
   font-size: 1.125em;
   font-weight: 500;
-  padding-bottom: 10%;
+  padding-bottom: 1rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -74,9 +80,16 @@ export const BestBoardTitle = styled.span`
 export const BestBoardContents = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
-export const BestBoardProfile = styled.div``;
-export const BestBoardProfileImg = styled.img``;
+export const BestBoardProfile = styled.div`
+  display: flex;
+  align-items: center;
+`;
+export const BestBoardProfileImg = styled.img`
+  width: 2.5rem;
+  height: 2.5rem;
+`;
 export const BestBoardWriter = styled.span``;
 export const BestBoardCreatedAt = styled.span``;
 export const BestBoardLike = styled.span``;
@@ -204,9 +217,6 @@ export const PageBox = styled.div`
   background: #ddd;
   flex: 1;
 `;
-
-export const PrevPage = styled.div``;
-export const NextPage = styled.div``;
 
 export const RegisterButton = styled.button`
   flex: 1;

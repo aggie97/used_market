@@ -47,6 +47,7 @@ const PaginationUI = ({
                   {index + startPage}
                 </Label>
                 <Radio
+                  defaultChecked={index === 0}
                   type="radio"
                   name="pages"
                   id={String(index + startPage)}

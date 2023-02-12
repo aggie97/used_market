@@ -11,3 +11,10 @@ export const globalStyles = css`
 export const styleSet = {
   mainColor: "#6401ff",
 };
+
+export const breakPoint = {
+  desktop: "(min-width: 1600px)",
+  laptop: "(max-width: 1024px)",
+  tablet: "(max-width: 768px)",
+  mobile: "(max-width: 480px)",
+};

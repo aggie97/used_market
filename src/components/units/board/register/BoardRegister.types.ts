@@ -35,6 +35,7 @@ export interface ObjectIndexable extends IInput {
 }
 
 export interface IProps {
+  onCloseModal: () => void;
   onCompleteAddressSearch: (data: any) => void;
   onClickAddressSearch: () => void;
   onClickPicture: () => void;

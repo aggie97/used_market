@@ -19,7 +19,7 @@ import { Modal } from "antd";
 
 const BoardDetail = () => {
   const router = useRouter();
-  const [dance, setDance] = useState(false);
+
   const [deleteBoard] = useMutation<
     Pick<IMutation, "deleteBoard">,
     IMutationDeleteBoardArgs
@@ -67,8 +67,6 @@ const BoardDetail = () => {
   };
 
   const onClickLike = async () => {
-    setDance((prev) => !prev);
-    // event.target.closest("#like").childNodes[0];
     await likeBoard({
       variables: { boardId: String(router.query.id) },
       refetchQueries: [
@@ -88,7 +86,6 @@ const BoardDetail = () => {
   return (
     <BoardDetailUI
       data={data}
-      dance={dance}
       loading={loading}
       addressBox={addressBox}
       onClickAddressLink={onClickAddressLink}

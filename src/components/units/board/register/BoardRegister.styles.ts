@@ -1,19 +1,26 @@
 import styled from "@emotion/styled";
 import { Modal } from "antd";
 import DaumPostcode from "react-daum-postcode";
+import { breakPoint, styleSet } from "../../../../commons/styles/globalStyles";
 
 export const Wrapper = styled.form`
   max-width: 1200px;
   width: 100%;
-  margin: 5em auto;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  padding: 4rem 6rem;
+  margin: 5rem auto;
 
-  padding: 60px 100px;
+  @media ${breakPoint.tablet} {
+    padding: 2rem 3rem;
+  }
+  @media ${breakPoint.mobile} {
+    padding: 1rem;
+  }
 
   span {
     font-weight: 500;
@@ -22,12 +29,19 @@ export const Wrapper = styled.form`
 
   input {
     border: 1px solid #bdbdbd;
+    transition: border 0.3s ease;
+    :focus {
+      border: 1px solid ${styleSet.mainColor};
+    }
   }
 
   & > div {
     width: 100%;
     display: flex;
     gap: 10px;
+    @media ${breakPoint.mobile} {
+      flex-direction: column;
+    }
   }
 `;
 
@@ -85,6 +99,7 @@ export const AddressBox = styled.div`
     background-color: black;
     padding: 14px 16px;
     border: none;
+    cursor: pointer;
   }
 `;
 
@@ -151,12 +166,6 @@ export const SubmitBox = styled.div`
   padding: 20px 0;
   display: flex;
   justify-content: center;
-
-  button {
-    background: transparent;
-    border: none;
-    outline: none;
-  }
 `;
 
 export const AddressModal = styled(Modal)``;

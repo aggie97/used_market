@@ -2,7 +2,6 @@ import { IQuery } from "../../../../commons/types/generated/types";
 import * as B from "./BoardDetail.styles";
 interface IBoardDetailProps {
   data?: Pick<IQuery, "fetchBoard">;
-  dance: boolean;
   loading: boolean;
   addressBox: boolean;
   onClickAddressLink: () => void;
@@ -15,7 +14,7 @@ interface IBoardDetailProps {
 
 const BoardDetailUI = ({
   data,
-  dance,
+
   addressBox,
   loading,
   onClickAddressLink,
@@ -98,22 +97,18 @@ const BoardDetailUI = ({
                   {data?.fetchBoard?.contents}
                 </B.MainContent>
               </B.Main>
-              <B.YoutubeBox>
-                <B.YoutubePlayer
-                  style={{
-                    minWidth: "1080px",
-                    width: "100%",
-                    minHeight: "720px",
-                    height: "100%",
-                  }}
-                  controls
-                  url={String(data?.fetchBoard?.youtubeUrl)}
-                ></B.YoutubePlayer>
-              </B.YoutubeBox>
+              {data?.fetchBoard?.youtubeUrl?.includes("youtube") ? (
+                <B.YoutubeBox>
+                  <B.YoutubePlayer
+                    style={{ width: "100%" }}
+                    controls
+                    url={String(data?.fetchBoard?.youtubeUrl)}
+                  ></B.YoutubePlayer>
+                </B.YoutubeBox>
+              ) : null}
               <B.LikeDislikeBox id="like-dislike-box">
                 <B.LikeBox onClick={onClickLike} id="like">
                   <LikeBox
-                    active={dance}
                     width="20"
                     height="18"
                     viewBox="0 0 20 18"
@@ -125,7 +120,6 @@ const BoardDetailUI = ({
                       fill="#828282"
                     />
                   </LikeBox>
-
                   {data?.fetchBoard?.likeCount}
                 </B.LikeBox>
                 <B.DislikeBox onClick={onClickDislike} id="dislike">
@@ -137,7 +131,6 @@ const BoardDetailUI = ({
           )}
         </>
       </B.DetailPageWrapper>
-
       <B.ButtonBox>
         <B.DeleteButton onClick={onClickDelete}>삭제</B.DeleteButton>
         <B.UpdateButton onClick={onClickEdit}>수정</B.UpdateButton>

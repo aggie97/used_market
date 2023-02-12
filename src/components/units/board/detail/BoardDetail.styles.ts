@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
+import { styleSet } from "../../../../commons/styles/globalStyles";
 /* --------- 게시물 상세 페이지 ---------- */
 
 export const DetailPageWrapper = styled.div`
-  width: 1240px;
+  max-width: 1240px;
   margin: 0 auto;
   margin-top: 5rem;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.2);
@@ -70,7 +70,7 @@ export const AddressBox = styled.div`
 export const AddressContentBox = styled.div`
   position: absolute;
   top: -80px;
-  left: -333px;
+  left: -338px;
   width: 376px;
   display: flex;
   justify-content: end;
@@ -128,23 +128,28 @@ export const Title = styled.div`
   font-weight: 700;
 `;
 
-export const MainImgBox = styled.div``;
+export const MainImgBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+`;
 export const MainImage = styled.img`
-  max-width: 100%;
-  object-fit: contain;
+  max-width: 30%;
+  object-fit: cover;
   object-position: center center;
 `;
 
 export const MainContent = styled.div``;
 
 export const YoutubeBox = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 100px 0;
+  width: 100%;
+  padding: 5rem 0;
 `;
 
 export const YoutubePlayer = styled(ReactPlayer)`
   border: none;
+  width: 100%;
+  margin: 0;
 `;
 
 export const LikeDislikeBox = styled.div`
@@ -152,43 +157,6 @@ export const LikeDislikeBox = styled.div`
   justify-content: center;
   gap: 40px;
 `;
-
-const moveUpAndDown = keyframes`
-  0%{
-    transform: translateY(0px);
-  }
-  50%{
-    transform: translateY(-10px);
-  }
-  100%{
-    transform: translateY(0px);
-  }
-`;
-
-// const danceWithLight = keyframes`
-//   0%{
-//     transform: translateY(0px);
-//     color: #ffd600;
-//   }
-//   40%{
-//     transform: translateY(-15px);
-//     color: #ffff00;
-//   }
-//   50%{
-//     transform: translateY(-20px) rotate(-0.1turn);
-//     color: #ffd6ff;
-//   }
-//   60%{
-//     transform: translateY(-15px);
-//     transform: rotate(0turn);
-//     color: #ffff00;
-//   }
-
-//   100%{
-//     transform: translateY(0px);
-//     color: #828282;
-//   }
-// `;
 
 export const LikeBox = styled.button`
   width: 40px;
@@ -225,7 +193,6 @@ export const DislikeBox = styled.button`
 export const LikeImg = styled.svg`
   &:hover {
     color: #ffd600;
-    animation: ${moveUpAndDown} 1s infinite linear;
   }
 `;
 export const DislikeImg = styled.img`
@@ -248,14 +215,15 @@ export const ButtonBox = styled.div`
     background: #fff;
     border: 1px solid #bdbdbd;
     cursor: pointer;
-    transition: all ease-in-out 0.3s;
+    transition: all ease-in-out 0.15s;
     font-weight: 500;
     font-size: 1rem;
     letter-spacing: 5px;
   }
 
   & > button:hover {
-    background: #ffd600;
+    color: white;
+    background: ${styleSet.mainColor};
   }
 `;
 export const DeleteButton = styled.button``;
