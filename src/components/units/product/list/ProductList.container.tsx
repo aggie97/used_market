@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Modal } from "antd";
 import { useRouter } from "next/router";
+
 import { useSetRecoilState } from "recoil";
 import {
   cartItemsState,
@@ -28,15 +29,21 @@ const ProductList = () => {
   const onClickCart =
     (item: IUseditem) => (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
-      const items = JSON.parse(localStorage.getItem("useditems") ?? "[]");
-      const temp = items.filter((el: IUseditem) => el._id === item._id);
-      if (temp.length === 1) {
-        Modal.warning({ content: "이미 담으신 물품입니다!!!" });
-        return;
-      }
-      items.push(item);
-      setItems(items);
-      localStorage.setItem("useditems", JSON.stringify(items));
+      Modal.confirm({
+        content: "카트에 담으시겠습니까?",
+        onCancel: () => {},
+        onOk: () => {
+          const items = JSON.parse(localStorage.getItem("useditems") ?? "[]");
+          const temp = items.filter((el: IUseditem) => el._id === item._id);
+          if (temp.length === 1) {
+            Modal.warning({ content: "이미 담으신 물품입니다!" });
+            return;
+          }
+          items.push(item);
+          setItems(items);
+          localStorage.setItem("useditems", JSON.stringify(items));
+        },
+      });
     };
 
   const onClickProductItem = (item: IUseditem) => async () => {

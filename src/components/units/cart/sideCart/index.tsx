@@ -42,6 +42,6 @@ const SideCartItemWrapper = styled.div`
   transition: all ease 0.2s;
   &:hover {
     opacity: 0.7;
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
 `;
