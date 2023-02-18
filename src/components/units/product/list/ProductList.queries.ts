@@ -24,3 +24,9 @@ export const FETCH_USED_ITEMS = gql`
     }
   }
 `;
+
+export const TOGGLE_USED_ITEM_PICK = gql`
+  mutation toggleUsedItemPick($useditemId: String!) {
+    toggleUsedItemPick(useditemId: $useditemId)
+  }
+`;

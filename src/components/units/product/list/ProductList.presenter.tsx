@@ -1,8 +1,11 @@
+import { HeartFilled, ShoppingCartOutlined } from "@ant-design/icons";
+import { MouseEvent } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { IQuery, IUseditem } from "../../../../commons/types/generated/types";
-import Button from "../../../common/button";
-
 import {
+  ControlBox,
+  ControlButton,
+  LikeBox,
   ProductCard,
   ProductImg,
   ProductInfo,
@@ -12,14 +15,16 @@ import {
 interface IProductListProps {
   onClickCart: (
     item: IUseditem
-  ) => (event: React.MouseEvent<HTMLButtonElement>) => void;
+  ) => (event: MouseEvent<HTMLButtonElement>) => void;
   onClickProductItem: (itemId: IUseditem) => () => void;
+
   itemsData?: Pick<IQuery, "fetchUseditems">;
   loadFunc: () => void;
 }
 
 const ProductListUI = ({
   onClickCart,
+
   itemsData,
   loadFunc,
   onClickProductItem,
@@ -32,13 +37,23 @@ const ProductListUI = ({
           loadMore={loadFunc}
           hasMore={true || false}
         >
-          {itemsData?.fetchUseditems.map((item, i) => (
+          {itemsData?.fetchUseditems.map((item) => (
             <ProductCard key={item._id} onClick={onClickProductItem(item)}>
               <ProductImg
                 src={`https://storage.googleapis.com/${item.images?.[0] ?? ""}`}
               />
-              <ProductInfo>{item.name}</ProductInfo>
-              <Button onClick={onClickCart(item)}>카트에 담기</Button>
+              <ProductInfo>
+                <span>{item.name}</span>
+              </ProductInfo>
+              <ControlBox>
+                <LikeBox>
+                  <HeartFilled />
+                  <span>{item.pickedCount}</span>
+                </LikeBox>
+                <ControlButton onClick={onClickCart(item)}>
+                  <ShoppingCartOutlined />
+                </ControlButton>
+              </ControlBox>
             </ProductCard>
           ))}
         </InfiniteScroll>

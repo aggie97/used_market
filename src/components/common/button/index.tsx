@@ -33,7 +33,7 @@ export default Button;
 
 const StyledButton = styled.button`
   width: ${(props: IStyle) => props.width ?? "100%"};
-  height: ${(props: IStyle) => props.height ?? "100%"};
+  height: ${(props: IStyle) => props.height ?? "auto"};
   padding: ${(props: IStyle) => props.padding ?? "0.5rem"};
   font-size: 1rem;
   font-weight: 400;
