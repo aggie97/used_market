@@ -16,18 +16,20 @@ const SideCartItemList = () => {
 
   return (
     <div>
-      {items.map((item: IUseditem) => (
-        <SideCartItemWrapper
-          onClick={async () => await router.push(`/market/${item._id}`)}
-          key={item._id}
-        >
-          <img
-            width={50}
-            height={50}
-            src={`https://storage.googleapis.com/${item.images?.[0] ?? ""}`}
-          />
-        </SideCartItemWrapper>
-      ))}
+      {items.map((item: IUseditem, index) =>
+        index < 3 ? (
+          <SideCartItemWrapper
+            onClick={async () => await router.push(`/market/${item._id}`)}
+            key={item._id}
+          >
+            <img
+              width={50}
+              height={50}
+              src={`https://storage.googleapis.com/${item.images?.[0] ?? ""}`}
+            />
+          </SideCartItemWrapper>
+        ) : null
+      )}
     </div>
   );
 };
