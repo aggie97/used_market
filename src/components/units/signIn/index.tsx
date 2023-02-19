@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { Modal } from "antd";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { accessTokenState, isLoggedInUserState } from "../../../commons/store";
@@ -18,7 +18,7 @@ import Button from "../../common/button";
 import { styleSet } from "../../../commons/styles/globalStyles";
 
 interface IStyle {
-  isFocused?: boolean;
+  inputState: { focus: boolean; dirty: boolean };
 }
 
 const LOGIN_USER = gql`
@@ -43,12 +43,13 @@ const MySchema = yup.object({
 const SignIn = () => {
   const router = useRouter();
   const [isPasswordMasked, setIsMaskedPassword] = useState(true);
-  const [isFocused, setIsFocused] = useState({
-    email: false,
-    password: false,
+
+  const [inputState, setInputState] = useState({
+    email: { focus: false, dirty: false },
+    password: { focus: false, dirty: false },
   });
 
-  const { register, handleSubmit, setFocus, getValues, formState } =
+  const { register, handleSubmit, setFocus, formState, getValues } =
     useForm<IMutationLoginUserArgs>({
       resolver: yupResolver(MySchema),
       mode: "onSubmit",
@@ -56,7 +57,6 @@ const SignIn = () => {
 
   useEffect(() => {
     setFocus("email");
-    setIsFocused({ email: true, password: false });
   }, []);
 
   const setIsLoggedInUser = useSetRecoilState(isLoggedInUserState);
@@ -93,34 +93,51 @@ const SignIn = () => {
     setIsMaskedPassword((prev) => !prev);
   };
 
-  const onClickEmail = () => {
-    if (document.activeElement?.tagName === "INPUT") {
-      if (document.activeElement?.id === "email") {
-        setIsFocused({
-          email: true,
-          password: getValues("password") !== "",
-        });
-      } else if (document.activeElement?.id === "password") {
-        setIsFocused({ email: getValues("email") !== "", password: true });
-      }
+  const onFocusInput = (event: FocusEvent<HTMLInputElement>) => {
+    if (event.currentTarget.id === "email") {
+      setInputState({
+        ...inputState,
+        email: { focus: true, dirty: getValues("email") !== "" },
+      });
     } else {
-      setIsFocused({
-        email: getValues("email") !== "",
-        password: getValues("password") !== "",
+      setInputState({
+        ...inputState,
+        password: { focus: true, dirty: getValues("password") !== "" },
+      });
+    }
+  };
+
+  const onBlurInput = (event: FocusEvent<HTMLInputElement>) => {
+    if (event.currentTarget.id === "email") {
+      setInputState({
+        ...inputState,
+        email: { focus: false, dirty: getValues("email") !== "" },
+      });
+    } else {
+      setInputState({
+        ...inputState,
+        password: { focus: false, dirty: getValues("password") !== "" },
       });
     }
   };
 
   return (
-    <SignPageWrapper onClick={onClickEmail}>
+    <SignPageWrapper>
       <LoginContainer>
         <Logo />
         <h1>로그인</h1>
         <FormWrapper onSubmit={handleSubmit(onSubmit)}>
           <InputWrapper>
-            <Input type="email" id="email" {...register("email")} />
+            <Input
+              onFocus={onFocusInput}
+              type="email"
+              id="email"
+              {...register("email", {
+                onBlur: onBlurInput,
+              })}
+            />
             <PlaceHolder
-              isFocused={isFocused.email}
+              inputState={inputState.email}
               onClick={() => setFocus("email")}
             >
               이메일 입력
@@ -129,22 +146,33 @@ const SignIn = () => {
           <CommonError>{formState.errors.email?.message}</CommonError>
           <InputWrapper>
             <Input
+              onFocus={onFocusInput}
               {...register("password")}
               type={isPasswordMasked ? "password" : "text"}
               id="password"
+              {...register("password", {
+                onBlur: onBlurInput,
+              })}
             />
             <PlaceHolder
-              isFocused={isFocused.password}
+              inputState={inputState.password}
               onClick={() => setFocus("password")}
             >
               비밀번호 입력
             </PlaceHolder>
-            <ToggleLabel onClick={onClickToggleLabel}>
-              {isPasswordMasked ? "비밀번호 보기" : "가리기"}
-            </ToggleLabel>
             <CommonError>{formState.errors.password?.message}</CommonError>
           </InputWrapper>
-          <Button>로그인</Button>
+          <ButtonBox>
+            <ShowPassword>
+              <input
+                id="showPassword"
+                type="checkbox"
+                onClick={onClickToggleLabel}
+              />
+              <Label htmlFor="showPassword">비밀번호 표시</Label>
+            </ShowPassword>
+            <Button width="6rem">로그인</Button>
+          </ButtonBox>
         </FormWrapper>
         <div>
           <p>회원이 아니신가요?</p>
@@ -184,18 +212,6 @@ export const FormWrapper = styled.form`
   flex-direction: column;
   gap: 0.5rem;
   position: relative;
-
-  & input {
-    position: relative;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px 1em;
-    font-size: 1rem;
-    font-weight: 400;
-    outline: none;
-    transition: all 0.1s ease;
-  }
 `;
 
 export const PasswordWrapper = styled.div`
@@ -207,37 +223,52 @@ export const InputWrapper = styled.div`
 `;
 
 export const Input = styled.input`
+  position: relative;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 1em;
+  font-size: 1rem;
+  font-weight: 400;
+  outline: none;
+  transition: all 0.1s ease;
+  margin: 1px 0;
   :focus {
     border: 2px solid ${styleSet.mainColor};
+    margin: 0;
   }
 `;
 
 export const PlaceHolder = styled.div`
   position: absolute;
-  left: ${(props: IStyle) => (props.isFocused ? "0.8rem" : "1rem")};
-  bottom: ${(props: IStyle) => (props.isFocused ? "2rem" : "0.65rem")};
-  font-size: ${(props: IStyle) => (props.isFocused ? "0.8rem" : "1rem")};
+  left: ${(props: IStyle) =>
+    props.inputState.focus || props.inputState.dirty ? "0.8rem" : "1rem"};
+  bottom: ${(props: IStyle) =>
+    props.inputState.focus || props.inputState.dirty ? "2rem" : "0.65rem"};
+  font-size: ${(props: IStyle) =>
+    props.inputState.focus || props.inputState.dirty ? "0.8rem" : "1rem"};
   background-color: ${(props: IStyle) =>
-    props.isFocused ? "#fff" : "transparent"};
-  padding: ${(props: IStyle) => (props.isFocused ? "0 0.2rem" : "inherit")};
-  color: ${(props: IStyle) => (props.isFocused ? styleSet.mainColor : "#777")};
+    props.inputState.focus || props.inputState.dirty ? "#fff" : "transparent"};
+  padding: ${(props: IStyle) =>
+    props.inputState.focus || props.inputState.dirty ? "0 0.2rem" : "inherit"};
+  color: ${(props: IStyle) =>
+    props.inputState.focus ? styleSet.mainColor : "#777"};
   transition: all 0.15s ease;
 `;
 
-export const Password = styled.input`
-  padding-right: 105px !important;
+export const ButtonBox = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
-export const ToggleLabel = styled.label`
-  position: absolute;
-  top: 0;
-  right: 1rem;
-  line-height: 45px;
-  font-size: 14px;
-  font-weight: 400;
-  width: 100px;
+export const ShowPassword = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const Label = styled.label`
   cursor: pointer;
-  text-align: end;
 `;
 
 export const MoveToSignUp = styled.a`

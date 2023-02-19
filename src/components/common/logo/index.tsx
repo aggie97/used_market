@@ -9,6 +9,7 @@ export const LogoIcon = styled.span`
   height: 40px;
   background-size: 363px 300px;
   margin: 0;
+  cursor: pointer;
 `;
 
 export const HomeLink = styled.a`
