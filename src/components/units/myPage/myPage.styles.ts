@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 `;
 
 export const LeftSideWrapper = styled.div`
-  flex: 2;
+  flex: 2 2 5rem;
   border: 1px solid red;
 `;
 
@@ -29,6 +29,7 @@ export const UserImageBox = styled.div`
   border: 1px solid black;
   border-radius: 1rem;
   overflow: hidden;
+  cursor: pointer;
 `;
 
 export const DefaultImage = styled.div`
@@ -39,7 +40,10 @@ export const DefaultImage = styled.div`
   justify-content: center;
   align-items: center;
   color: #888;
-  cursor: pointer;
+`;
+
+export const InvisibleInput = styled.input`
+  width: 0;
 `;
 
 export const UserName = styled.span`

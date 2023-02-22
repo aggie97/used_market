@@ -1,49 +1,24 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { Modal } from "antd";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import {
   IMutation,
   IMutationCreatePointTransactionOfLoadingArgs,
+  IMutationUpdateUserArgs,
+  IMutationUploadFileArgs,
   IQuery,
 } from "../../../commons/types/generated/types";
 import Button from "../../common/button";
 import useAuth from "../../common/useAuth";
+import {
+  CREATE_POINT_TRANSACTION_OF_LOADING,
+  FETCH_USER_LOGGED_IN,
+  UPDATE_USER,
+  UPLOAD_FILE,
+} from "./myPage.queries";
 import * as S from "./myPage.styles";
-
-const USER_LOGGED_IN = gql`
-  query {
-    fetchUserLoggedIn {
-      _id
-      name
-      picture
-      userPoint {
-        amount
-      }
-    }
-  }
-`;
-
-export const CREATE_POINT_TRANSACTION_OF_LOADING = gql`
-  mutation createPointTransactionOfLoading($impUid: ID!) {
-    createPointTransactionOfLoading(impUid: $impUid) {
-      _id
-      amount
-      balance
-      status
-      statusDetail
-      createdAt
-      updatedAt
-      useditem {
-        _id
-        name
-        remarks
-        contents
-        soldAt
-      }
-    }
-  }
-`;
 
 declare const window: typeof globalThis & {
   IMP: any;
@@ -52,6 +27,8 @@ declare const window: typeof globalThis & {
 const MyPage = () => {
   useAuth();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const TabMenu = [
     { name: "찜 목록", content: "찜 목록" },
     { name: "장바구니 목록", content: " 장바구니 목록" },
@@ -59,9 +36,21 @@ const MyPage = () => {
     { name: "판매 목록", content: "판매 목록" },
   ];
 
-  const { data } = useQuery<Pick<IQuery, "fetchUserLoggedIn">>(USER_LOGGED_IN);
+  const { data } =
+    useQuery<Pick<IQuery, "fetchUserLoggedIn">>(FETCH_USER_LOGGED_IN);
 
   const [activeTab, setActiveTab] = useState([true, false, false, false]);
+
+  const [uploadFile] = useMutation<
+    Pick<IMutation, "uploadFile">,
+    IMutationUploadFileArgs
+  >(UPLOAD_FILE);
+
+  const [updateUser] = useMutation<
+    Pick<IMutation, "updateUser">,
+    IMutationUpdateUserArgs
+  >(UPDATE_USER);
+
   const [createPointTransactionOfLoading] = useMutation<
     Pick<IMutation, "createPointTransactionOfLoading">,
     IMutationCreatePointTransactionOfLoadingArgs
@@ -94,7 +83,7 @@ const MyPage = () => {
           try {
             const result = await createPointTransactionOfLoading({
               variables: { impUid: rsp.imp_uid },
-              refetchQueries: [{ query: USER_LOGGED_IN }],
+              refetchQueries: [{ query: FETCH_USER_LOGGED_IN }],
             });
             console.log(result);
             alert("결제 요청 완료");
@@ -112,6 +101,29 @@ const MyPage = () => {
     setActiveTab((prev) => prev.map((_, stateIndex) => index === stateIndex));
   };
 
+  const onUpdateUser = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0];
+
+    try {
+      const url = await uploadFile({ variables: { file } });
+      const picture = String(url.data?.uploadFile.url);
+      await updateUser({
+        variables: {
+          updateUserInput: {
+            picture,
+            name: data?.fetchUserLoggedIn.name,
+          },
+        },
+        update(cache) {
+          cache.modify({ fields: { fetchUserLoggedIn: () => {} } });
+        },
+      });
+      Modal.success({ content: "프로필 이미지가 변경되었습니다." });
+    } catch (error) {}
+  };
+
+  const onClickImageBox = () => inputRef.current?.click();
+
   return (
     <>
       <Head>
@@ -128,15 +140,22 @@ const MyPage = () => {
       <S.Wrapper>
         <S.LeftSideWrapper>
           <S.UserInfo>
-            <S.UserImageBox>
+            <S.UserImageBox onClick={onClickImageBox}>
               {data?.fetchUserLoggedIn.picture ? (
                 <Image
-                  layout="fill"
+                  width={500}
+                  height={500}
+                  layout="responsive"
                   src={`https://storage.googleapis.com/${data?.fetchUserLoggedIn.picture}`}
                 />
               ) : (
                 <S.DefaultImage>프로필 이미지 선택하기</S.DefaultImage>
               )}
+              <S.InvisibleInput
+                ref={inputRef}
+                type="file"
+                onChange={onUpdateUser}
+              />
             </S.UserImageBox>
             <S.UserName>{data?.fetchUserLoggedIn.name}</S.UserName>
             <S.PointBox>
